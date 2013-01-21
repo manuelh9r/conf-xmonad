@@ -1,5 +1,5 @@
 # xmonad-config
-xmonad-config is the [xmonad](http://xmonad.org/) configuration used by Vic Fryzel.
+xmonad-config is the [xmonad](http://xmonad.org/) configuration used by Manuel Holzleitner. The config is based on the configuration made available by Vic Fryzel.
 
 
 ## Introduction
