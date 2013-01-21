@@ -14,6 +14,7 @@ import XMonad.Layout.Spiral
 import XMonad.Layout.Tabbed
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
+import XMonad.Layout.Reflect
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
@@ -30,8 +31,7 @@ myTerminal = "/usr/bin/urxvt"
 -- Workspaces
 -- The default number of workspaces (virtual screens) and their names.
 --
-myWorkspaces = ["1:term","2:web","3:code","4:vm","5:media"] ++ map show [6..9]
- 
+myWorkspaces = ["1:hana-dev","2:java-dev","3:xsjs-dev","4:hana-adm","5:exo","6:term","7:web"] ++ map show [6..9]
 
 ------------------------------------------------------------------------
 -- Window rules
@@ -57,8 +57,6 @@ myManageHook = composeAll
     , resource  =? "kdesktop"       --> doIgnore
     , className =? "MPlayer"        --> doFloat
     , resource  =? "skype"          --> doFloat
-    , className =? "VirtualBox"     --> doShift "4:vm"
-    , className =? "Xchat"          --> doShift "5:media"
     , isFullscreen --> (doF W.focusDown <+> doFullFloat)]
 
 
@@ -74,6 +72,7 @@ myManageHook = composeAll
 --
 myLayout = avoidStruts (
     tiled |||
+    swapped |||
     Mirror tiled |||
     tabbed shrinkText tabConfig |||
     Full |||
@@ -81,12 +80,13 @@ myLayout = avoidStruts (
   where
     -- default tiling algorithm partitions the screen into two panes.
     tiled   = Tall nmaster delta ratio
+    swapped = reflectHoriz $ Tall nmaster delta (3/4)
  
     -- The default number of windows in the master pane.
     nmaster = 1
  
     -- Default proportion of screen occupied by master pane.
-    ratio   = 1/2
+    ratio   = 2/3
  
     -- Percent of screen to increment by when resizing panes.
     delta   = 3/100
@@ -97,11 +97,11 @@ myLayout = avoidStruts (
 -- Currently based on the ir_black theme.
 --
 myNormalBorderColor  = "#7c7c7c"
-myFocusedBorderColor = "#ffb6b0"
+myFocusedBorderColor = "#466EA6"
 
 -- Colors for text and backgrounds of each tab when in "Tabbed" layout.
 tabConfig = defaultTheme {
-    activeBorderColor = "#7C7C7C",
+    activeBorderColor = "#466EA6",
     activeTextColor = "#CEFFAC",
     activeColor = "#000000",
     inactiveBorderColor = "#7C7C7C",
@@ -116,7 +116,7 @@ xmobarTitleColor = "#FFB6B0"
 xmobarCurrentWorkspaceColor = "#CEFFAC"
 
 -- Width of the window border in pixels.
-myBorderWidth = 1
+myBorderWidth = 2
 
 
 ------------------------------------------------------------------------
@@ -127,7 +127,7 @@ myBorderWidth = 1
 -- ("right alt"), which does not conflict with emacs keybindings. The
 -- "windows key" is usually mod4Mask.
 --
-myModMask = mod1Mask
+myModMask = mod4Mask
  
 -- The mask for the numlock key. Numlock status is "masked" from the
 -- current modifier status, so the keybindings will work with numlock on or
@@ -142,7 +142,6 @@ myModMask = mod1Mask
 -- Set numlockMask = 0 if you don't have a numlock key, or want to treat
 -- numlock status separately.
 --
-myNumlockMask = mod2Mask
  
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   ----------------------------------------------------------------------
@@ -160,7 +159,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- Launch dmenu via yeganesh.
   -- Use this to launch programs without a key binding.
   , ((modMask, xK_p),
-     spawn "exe=`dmenu_path | yeganesh` && eval \"exec $exe\"")
+     spawn "dmenu_run")
 
   -- Take a screenshot in select mode.
   -- After pressing this key binding, click a window, or draw a rectangle with
@@ -292,7 +291,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
   -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
   [((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
-      | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+      | (key, sc) <- zip [xK_e, xK_w, xK_r] [0..]
       , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
  
  
@@ -347,13 +346,13 @@ myStartupHook = return ()
 -- Run xmonad with all the defaults we set up.
 --
 main = do
-  xmproc <- spawnPipe "/usr/bin/xmobar ~/.xmonad/xmobar.hs"
+  xmproc <- spawnPipe "xmobar ~/.xmonad/xmobar.hs"
   xmonad $ defaults {
       logHook = dynamicLogWithPP $ xmobarPP {
             ppOutput = hPutStrLn xmproc
           , ppTitle = xmobarColor xmobarTitleColor "" . shorten 100
           , ppCurrent = xmobarColor xmobarCurrentWorkspaceColor ""
-          , ppSep = "   "}
+          , ppSep = " "}
       , manageHook = manageDocks <+> myManageHook
       , startupHook = setWMName "LG3D"
   }
@@ -373,7 +372,6 @@ defaults = defaultConfig {
     focusFollowsMouse  = myFocusFollowsMouse,
     borderWidth        = myBorderWidth,
     modMask            = myModMask,
-    numlockMask        = myNumlockMask,
     workspaces         = myWorkspaces,
     normalBorderColor  = myNormalBorderColor,
     focusedBorderColor = myFocusedBorderColor,
