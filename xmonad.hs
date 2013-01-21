@@ -31,7 +31,7 @@ myTerminal = "/usr/bin/urxvt"
 -- Workspaces
 -- The default number of workspaces (virtual screens) and their names.
 --
-myWorkspaces = ["1:hana-dev","2:java-dev","3:xsjs-dev","4:hana-adm","5:exo","6:term","7:web"] ++ map show [6..9]
+myWorkspaces = ["1:exo", "2:amq-svc","3:amq","4:lp","5:hana","6:misc","7:terms","8:web"] ++ map show [6..9]
 
 ------------------------------------------------------------------------
 -- Window rules
