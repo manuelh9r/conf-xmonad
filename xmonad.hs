@@ -15,6 +15,8 @@ import XMonad.Layout.Tabbed
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Layout.Reflect
+import XMonad.Util.NamedWindows (getName)
+import Data.List
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
@@ -47,20 +49,16 @@ myWorkspaces = ["1:exo", "2:amq-svc","3:testfwks", "4:amq","5:lp","6:hana","7:mi
 -- To match on the WM_NAME, you can use 'title' in the same way that
 -- 'className' and 'resource' are used below.
 --
-myManageHook = composeAll
-    [ className =? "Chromium"       --> doShift "2:web"
-    , resource  =? "desktop_window" --> doIgnore
-    , className =? "Galculator"     --> doFloat
-    , className =? "Gimp"           --> doFloat
-    , className =? "Google-chrome"  --> doShift "2:web"
-    , resource  =? "gpicview"       --> doFloat
-    , resource  =? "kdesktop"       --> doIgnore
-    , className =? "MPlayer"        --> doFloat
-    , resource  =? "skype"          --> doFloat
-    , isFullscreen --> (doF W.focusDown <+> doFullFloat)]
+myManageHook = composeAll . concat $
+                  [  [ fmap (c `isInfixOf`) title  --> doShift "5:lp" | c <- myLP]
+                   , [ fmap (c `isInfixOf`) title  --> doShift "2:amq-svc" | c <- myAmq]
+                   , [ fmap (c `isInfixOf`) title  --> doShift "3:testfwks" | c <- myTest]
+                   ]
+                  
+                   where myLP = ["Intelli"]
+                         myAmq = ["jpaas-msg-svc-workspace-intellij"]
+                         myTest = ["testframeworks"]
 
-
-------------------------------------------------------------------------
 -- Layouts
 -- You can specify and transform your layouts by modifying these values.
 -- If you change layout bindings be sure to use 'mod-shift-space' after
