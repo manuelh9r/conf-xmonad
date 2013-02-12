@@ -20,9 +20,10 @@ Config {
 	Run Uptime ["-t","<days>d <hours>h <minutes>m"] 10,
 	Run DiskU [("/", "<fc=#bbb>/:</fc> <used>/<size>"), ("/home", "<fc=#bbb>/home:</fc> <used>/<size>"), ("/var", "<fc=#bbb>/var:</fc> <used>/<size>"), ("md126p1", "hdd/media: <used>/<size>")]["-L", "20", "-H", "50", "-m", "1", "-p", "3"] 20,
 	Run DiskIO [("/", "<read> <write>")]["-L", "20", "-H", "50"] 10,
+	Run Com "/home/manuel/dev/tools/jenkins/jens" [] "jenkins" 50,
         Run StdinReader
     ],
     sepChar = "%",
     alignSep = "}{",
-    template = "%StdinReader% }{<fc=#466EA6>Disk Usage</fc> %disku%  <fc=#466EA6>Disk IO</fc> %diskio%  <fc=#466EA6>CPU Activity</fc> %multicpu%  <fc=#466EA6>Memory</fc> %memory%  <fc=#466EA6>Swap</fc> %swap%  <fc=#466EA6>Network</fc> %eth0%  <fc=#466EA6>Uptime</fc> %uptime%  <fc=#466EA6>%date%</fc>"
+    template = "%StdinReader% }{ %jenkins% <fc=#466EA6>Disk Usage</fc> %disku%  <fc=#466EA6>CPU Activity</fc> %multicpu%  <fc=#466EA6>Memory</fc> %memory%  <fc=#466EA6>Swap</fc> %swap%  <fc=#466EA6>Network</fc> %eth0%  <fc=#466EA6>Uptime</fc> %uptime%  <fc=#466EA6>%date%</fc>"
 }

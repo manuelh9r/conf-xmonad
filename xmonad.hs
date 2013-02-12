@@ -55,7 +55,7 @@ myManageHook = composeAll . concat $
                    , [ fmap (c `isInfixOf`) title  --> doShift "3:testfwks" | c <- myTest]
                    ]
                   
-                   where myLP = ["Intelli"]
+                   where myLP = ["bb-workspace"]
                          myAmq = ["jpaas-msg-svc-workspace-intellij"]
                          myTest = ["testframeworks"]
 
@@ -151,8 +151,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
      spawn $ XMonad.terminal conf)
 
   -- Lock the screen using xscreensaver.
-  , ((modMask .|. controlMask, xK_l),
-     spawn "xscreensaver-command -lock")
+  , ((mod1Mask .|. controlMask, xK_l),
+     spawn "slock")
 
   -- Launch dmenu via yeganesh.
   -- Use this to launch programs without a key binding.
